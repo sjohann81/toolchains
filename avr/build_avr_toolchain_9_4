@@ -1,0 +1,92 @@
+#!/bin/sh
+# this script was written by Sergio Johann Filho [sergio.johann@acad.pucrs.br]
+#
+# in order to build the toolchain, we need some basic tools:
+# flex bison libgmp3-dev libmpfr-dev autoconf texinfo build-essential libncurses5-dev
+#
+# you don't need to run this script as root. after completion, just move the
+# avr directory to its place (e.g /usr/local) and add the tools directory
+# to the PATH environment variable (export $PATH:=$PATH:/usr/local/avr/gcc/bin).
+# alternatively, the compiler may be left anywhere in the user home directory. Also, create
+# a symbolic link in the compiler directory (gcc-9.4.0 -> gcc) to support multiple
+# versions of the toolchain.
+#
+
+binutils_base="binutils-2.36.1"
+gcc_base="gcc-9.4.0"
+avrlibc_base="avr-libc-2.0.0"
+avrdude_base="avrdude-6.3"
+
+root_dir=`pwd`
+
+TARGET=avr
+PREFIX=${root_dir}/$TARGET/${gcc_base}
+BUILD=i686-linux-gnu
+
+# setup our toolchain new path
+export PATH=$PREFIX/bin:$PATH
+
+dl_dir="${root_dir}/download"
+src_dir="${root_dir}/source"
+bld_dir="${root_dir}/build"
+install_dir="${root_dir}/install"
+
+mkdir ${src_dir}
+mkdir ${bld_dir}
+mkdir ${install_dir}
+mkdir ${dl_dir}
+
+# download all sources
+cd $dl_dir
+wget -c ftp://ftp.gnu.org/gnu/binutils/${binutils_base}.tar.gz
+wget -c ftp://ftp.gnu.org/gnu/gcc/${gcc_base}/${gcc_base}.tar.gz
+wget -c http://download.savannah.gnu.org/releases/avr-libc/${avrlibc_base}.tar.bz2
+wget -c http://download.savannah.gnu.org/releases/avrdude/${avrdude_base}.tar.gz 
+
+# unpack everything
+cd ${src_dir}
+tar -zxvf ${dl_dir}/"${binutils_base}.tar.gz"
+tar -zxvf ${dl_dir}/"${gcc_base}.tar.gz"
+tar -jxvf ${dl_dir}/"${avrlibc_base}.tar.bz2"
+tar -zxvf ${dl_dir}/"${avrdude_base}.tar.gz"
+
+#
+# build binutils
+#
+cd ${bld_dir}
+mkdir ${binutils_base}
+cd ${binutils_base}
+${src_dir}/${binutils_base}/configure --prefix=$PREFIX --target=$TARGET --disable-nls
+make
+make install
+
+#
+# build GCC
+#
+cd ${bld_dir}
+mkdir ${gcc_base}-initial
+cd ${gcc_base}-initial
+${src_dir}/${gcc_base}/configure --prefix=$PREFIX --target=$TARGET \
+	--enable-languages=c,c++ --disable-nls --disable-libssp --with-dwarf2
+make
+make install
+
+#
+# build avr-libc
+#
+cd ${bld_dir}
+mkdir ${avrlibc_base}
+cd ${avrlibc_base}
+${src_dir}/${avrlibc_base}/configure --build=`./config.guess` --host=$TARGET --prefix=$PREFIX
+make
+make install
+
+#
+# build avrdude
+#
+cd ${bld_dir}
+mkdir ${avrdude_base}
+cd ${avrdude_base}
+${src_dir}/${avrdude_base}/configure --prefix=$PREFIX
+make
+make install
