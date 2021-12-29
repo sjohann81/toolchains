@@ -60,14 +60,14 @@ arm-9.4:
 	cd $(build_path)/$@ && ./build_arm_toolchain_9_4
 
 all:
-	make -s mips-4.9_patched
-	make -s mips-9.3_patched
-	make -s mips-9.3
-	make -s avr-9.4
-	make -s riscv64_9.3
-	make -s riscv32_9.3
-	make -s arm-7.1
-	make -s arm-9.4
+	make -s mips-4.9_patched || true
+	make -s mips-9.3_patched || true
+	make -s mips-9.3 || true
+	make -s avr-9.4 || true
+	make -s riscv64_9.3 || true
+	make -s riscv32_9.3 || true
+	make -s arm-7.1 || true
+	make -s arm-9.4 || true
 
 cleanall:
 	rm -rf $(build_path)
