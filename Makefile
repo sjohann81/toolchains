@@ -24,6 +24,13 @@ avr-9.4:
 	cd $(build_path)/$@ && ./build_avr_toolchain_9_4 2>&1 | tee build.log
 	cp -f ./env.sh $(build_path)/$@/avr/gcc-*/avr
 
+avr-11.2:
+	mkdir -p $(build_path)/$@
+	cp -f ./avr/build_avr_toolchain_11_2 $(build_path)/$@
+	cd $(build_path)/$@ && chmod +x build_avr_toolchain_11_2
+	cd $(build_path)/$@ && ./build_avr_toolchain_11_2 2>&1 | tee build.log
+	cp -f ./env.sh $(build_path)/$@/avr/gcc-*/avr
+
 mips-4.9_patched:
 	mkdir -p $(build_path)/$@
 	cp -f ./mips/build_mips_toolchain_4_9_patched $(build_path)/$@
@@ -59,12 +66,27 @@ riscv32_9.3:
 	cd $(build_path)/$@ && ./build_riscv32_toolchain_9_3 2>&1 | tee build.log
 	cp -f ./env.sh $(build_path)/$@/riscv32-unknown-elf/gcc-*/riscv32-unknown-elf/
 
+riscv32_11.2:
+	mkdir -p $(build_path)/$@
+	cp -f ./riscv/build_riscv32_toolchain_11_2 $(build_path)/$@
+	cd $(build_path)/$@ && chmod +x build_riscv32_toolchain_11_2
+	cd $(build_path)/$@ && ./build_riscv32_toolchain_11_2 2>&1 | tee build.log
+	cp -f ./env.sh $(build_path)/$@/riscv32-unknown-elf/gcc-*/riscv32-unknown-elf/
+
 riscv64_9.3:
 	mkdir -p $(build_path)/$@
 	cp -f ./riscv/build_riscv64_toolchain_9_3 $(build_path)/$@
 	cd $(build_path)/$@ && chmod +x build_riscv64_toolchain_9_3
 	cd $(build_path)/$@ && ./build_riscv64_toolchain_9_3 2>&1 | tee build.log
 	cp -f ./env.sh $(build_path)/$@/riscv32-unknown-elf/gcc-*/riscv32-unknown-elf/
+
+riscv64_11.2:
+	mkdir -p $(build_path)/$@
+	cp -f ./riscv/build_riscv32_toolchain_11_2 $(build_path)/$@
+	cd $(build_path)/$@ && chmod +x build_riscv32_toolchain_11_2
+	cd $(build_path)/$@ && ./build_riscv32_toolchain_11_2 2>&1 | tee build.log
+	cp -f ./env.sh $(build_path)/$@/riscv32-unknown-elf/gcc-*/riscv32-unknown-elf/
+
 
 all:
 	make -s mips-4.9_patched || true
