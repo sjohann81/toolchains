@@ -3,7 +3,8 @@
 # This is sample script to setup the environment.
 # Change the script changing the TOOLCHAIN_PATH accordingly
 
-TOOLCHAIN_PATH="./riscv32-unknown-elf/gcc-9.3.0/"
+TOOLCHAIN_PATH=$(dirname $(readlink -f $0))
+ARCH=$(basename $(dirname ${script_path}))
 
 export LANG="en_GB.UTF-8"
 
@@ -11,7 +12,7 @@ export LANG="en_GB.UTF-8"
 export PATH="${TOOLCHAIN_PATH}/bin":${PATH}
 
 # Pre-append path (binaries without prefix overlapping system settings)
-export PATH="${TOOLCHAIN_PATH}/riscv32-unknown-elf/bin":${PATH}
+export PATH="${TOOLCHAIN_PATH}/${ARCH}/bin":${PATH}
 
 # Headers
 export C_INCLUDE_PATH="${TOOLCHAIN_PATH}/include":${C_INCLUDE_PATH}
