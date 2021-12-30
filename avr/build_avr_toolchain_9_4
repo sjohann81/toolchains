@@ -63,13 +63,15 @@ make install
 #
 # build GCC
 #
+cd ${src_dir}/${gcc_base}/
+./contrib/download_prerequisites
 cd ${bld_dir}
 mkdir ${gcc_base}-initial
 cd ${gcc_base}-initial
 ${src_dir}/${gcc_base}/configure --prefix=$PREFIX --target=$TARGET \
 	--enable-languages=c,c++ --disable-nls --disable-libssp --with-dwarf2
-make
-make install
+make -j2 all-gcc
+make install-gcc
 
 #
 # build avr-libc
@@ -78,7 +80,7 @@ cd ${bld_dir}
 mkdir ${avrlibc_base}
 cd ${avrlibc_base}
 ${src_dir}/${avrlibc_base}/configure --build=`./config.guess` --host=$TARGET --prefix=$PREFIX
-make
+make -j2 all
 make install
 
 #
@@ -88,5 +90,5 @@ cd ${bld_dir}
 mkdir ${avrdude_base}
 cd ${avrdude_base}
 ${src_dir}/${avrdude_base}/configure --prefix=$PREFIX
-make
+make -j2 all
 make install
