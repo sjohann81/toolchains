@@ -59,7 +59,7 @@ tar -zxvf ${dl_dir}/"${newlib_base}.tar.gz"
 tar -zxvf ${dl_dir}/"${gdb_base}.tar.gz"
 
 # patch GCC
-cp ${root_dir}/patch/mips.md ${src_dir}/${gcc_base}/gcc/config/mips/
+cp ${root_dir}/patch/mips_9_3.md ${src_dir}/${gcc_base}/gcc/config/mips/mips.md
 
 #
 # build binutils
