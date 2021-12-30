@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # this script was written by Sergio Johann Filho [sergio.johann@acad.pucrs.br]
 #
 # mods performed on GCC sources for the MIPS I target (new flags added):
@@ -31,6 +32,18 @@
 #   next
 #   quit
 #
+
+version() {
+	echo "$@" | gawk -F. '{ printf("%03d%03d%03d", $1,$2,$3); }'
+}
+
+FIRST_NOT_WORKING_VERSION=11.0.0
+gcc_version=$(gcc --version | head -n1 | cut -d" " -f4)
+
+if [ "$(version ${gcc_version})" -gt "$(version ${FIRST_NOT_WORKING_VERSION})" ]; then
+	echo "The $0 build requires a gcc (${gcc_version}) < ${FIRST_NOT_WORKING_VERSION}"
+	exit 1
+fi
 
 binutils_base="binutils-2.27"
 gcc_base="gcc-4.9.3"
