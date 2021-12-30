@@ -45,6 +45,13 @@ mips-9.3_patched:
 	cd $(build_path)/$@ && ./build_mips_toolchain_9_3_patched 2>&1 | tee build.log
 	cp -f ./env.sh $(build_path)/$@/mips-elf/gcc-*/mips-elf/
 
+mips-11.2_patched:
+	mkdir -p $(build_path)/$@
+	cp -f ./mips/build_mips_toolchain_11_2_patched $(build_path)/$@
+	cd $(build_path)/$@ && chmod +x build_mips_toolchain_11_2_patched
+	cd $(build_path)/$@ && ./build_mips_toolchain_11_2_patched 2>&1 | tee build.log
+	cp -f ./env.sh $(build_path)/$@/mips-elf/gcc-*/mips-elf/
+
 riscv32_9.3:
 	mkdir -p $(build_path)/$@
 	cp -f ./riscv/build_riscv32_toolchain_9_3 $(build_path)/$@
