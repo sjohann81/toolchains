@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# this script was written by Sergio Johann Filho [sergio.johann@acad.pucrs.br]
+# This script was written by Sergio Johann Filho [sergio.johann@acad.pucrs.br]
 #
 # mods performed on GCC sources for the MIPS I target (new flags added):
 # -mpatfree - don't use patented MIPS instructions (swl, swr, lwl, lwr)
@@ -32,6 +32,8 @@
 #   next
 #   quit
 #
+
+set -o xtrace
 
 version() {
 	echo "$@" | gawk -F. '{ printf("%03d%03d%03d", $1,$2,$3); }'
