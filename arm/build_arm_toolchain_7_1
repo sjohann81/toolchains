@@ -30,10 +30,10 @@ src_dir="${root_dir}/source"
 bld_dir="${root_dir}/build"
 install_dir="${root_dir}/install"
 
-mkdir $src_dir
-mkdir $bld_dir
-mkdir $install_dir
-mkdir $dl_dir
+mkdir ${src_dir}
+mkdir ${bld_dir}
+mkdir ${install_dir}
+mkdir ${dl_dir}
 
 # download all sources
 cd $dl_dir
@@ -52,13 +52,13 @@ tar -zxvf ${dl_dir}/"${gdb_base}.tar.gz"
 #
 # build binutils
 #
-cd $bld_dir
-mkdir $binutils_base
-cd $binutils_base
+cd ${bld_dir}
+mkdir ${binutils_base}
+cd ${binutils_base}
 ${src_dir}/${binutils_base}/configure --prefix=$PREFIX --target=$TARGET
 	--enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld \
 	--disable-nls --disable-werror
-make
+make -j2 all
 make install
 
 #
@@ -73,8 +73,8 @@ cd ${gcc_base}-initial
 ${src_dir}/${gcc_base}/configure --prefix=$PREFIX --target=$TARGET \
         --with-gnu-as --with-gnu-ld --enable-languages=c,c++ \
         --with-newlib --without-headers 
-make
-make install
+make -j2 all-gcc
+make install-gcc
 
 # build libgcc.a
 make all-target-libgcc
@@ -83,20 +83,20 @@ make install-target-libgcc
 #
 # build newlib
 #
-cd $bld_dir
-mkdir $newlib_base
-cd $newlib_base
+cd ${bld_dir}
+mkdir ${newlib_base}
+cd ${newlib_base}
 ${src_dir}/${newlib_base}/configure --prefix=$PREFIX --target=$TARGET \
 	--disable-newlib-supplied-syscalls 
-make
+make -j2 all
 make install
 
 #
 # build GDB
 #
-cd $bld_dir
-mkdir $gdb_base
-cd $gdb_base
+cd ${bld_dir}
+mkdir ${gdb_base}
+cd ${gdb_base}
 ${src_dir}/${gdb_base}/configure --prefix=$PREFIX --target=$TARGET
-make
+make -j2 all
 make install
