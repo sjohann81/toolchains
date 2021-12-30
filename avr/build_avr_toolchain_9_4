@@ -1,5 +1,6 @@
 #!/bin/sh
-# this script was written by Sergio Johann Filho [sergio.johann@acad.pucrs.br]
+
+# This script was written by Sergio Johann Filho [sergio.johann@acad.pucrs.br]
 #
 # in order to build the toolchain, we need some basic tools:
 # flex bison libgmp3-dev libmpfr-dev autoconf texinfo build-essential libncurses5-dev
@@ -11,6 +12,8 @@
 # a symbolic link in the compiler directory (gcc-9.4.0 -> gcc) to support multiple
 # versions of the toolchain.
 #
+
+set -o xtrace
 
 binutils_base="binutils-2.36.1"
 gcc_base="gcc-9.4.0"
@@ -63,13 +66,15 @@ make install
 #
 # build GCC
 #
+cd ${src_dir}/${gcc_base}/
+./contrib/download_prerequisites
 cd ${bld_dir}
 mkdir ${gcc_base}-initial
 cd ${gcc_base}-initial
 ${src_dir}/${gcc_base}/configure --prefix=$PREFIX --target=$TARGET \
 	--enable-languages=c,c++ --disable-nls --disable-libssp --with-dwarf2
-make
-make install
+make -j2 all
+make install-gcc
 
 #
 # build avr-libc
@@ -78,7 +83,7 @@ cd ${bld_dir}
 mkdir ${avrlibc_base}
 cd ${avrlibc_base}
 ${src_dir}/${avrlibc_base}/configure --build=`./config.guess` --host=$TARGET --prefix=$PREFIX
-make
+make -j2 all
 make install
 
 #
@@ -88,5 +93,5 @@ cd ${bld_dir}
 mkdir ${avrdude_base}
 cd ${avrdude_base}
 ${src_dir}/${avrdude_base}/configure --prefix=$PREFIX
-make
+make -j2 all
 make install

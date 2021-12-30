@@ -1,5 +1,6 @@
 #!/bin/sh
-# this script was written by Sergio Johann Filho [sergio.johann@acad.pucrs.br]
+
+# This script was written by Sergio Johann Filho [sergio.johann@acad.pucrs.br]
 #
 # in order to build the toolchain, we need some basic tools:
 # flex bison libgmp3-dev libmpfr-dev autoconf texinfo build-essential libncurses5-dev
@@ -11,6 +12,8 @@
 # a symbolic link in the compiler directory (gcc-11.2.0 -> gcc) to support multiple
 # versions of the toolchain.
 #
+
+set -o xtrace
 
 binutils_base="binutils-2.37"
 gcc_base="gcc-11.2.0"
