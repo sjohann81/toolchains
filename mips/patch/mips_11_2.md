@@ -1687,7 +1687,7 @@
   [(set (match_operand:GPR 0 "muldiv_target_operand" "=l")
 	(mult:GPR (match_operand:GPR 1 "register_operand" "d")
 		  (match_operand:GPR 2 "register_operand" "d")))]
-  "ISA_HAS_<D>MULT && !TARGET_FIX_R4000"
+  "ISA_HAS_<D>MULT && !TARGET_FIX_R4000 && !ISA_MIPS1"
   "<d>mult\t%1,%2"
   [(set_attr "type" "imul")
    (set_attr "mode" "<MODE>")])
