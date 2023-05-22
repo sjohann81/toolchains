@@ -103,28 +103,31 @@ riscv64_9.3:
 
 riscv64_11.2:
 	mkdir -p $(build_path)/$@
-	cp -f ./riscv/build_riscv32_toolchain_11_2 $(build_path)/$@
-	cd $(build_path)/$@ && chmod +x build_riscv32_toolchain_11_2
-	cd $(build_path)/$@ && ./build_riscv32_toolchain_11_2 2>&1 | tee build.log
-	cp -f ./env.sh $(build_path)/$@/riscv32-unknown-elf/gcc-*/riscv32-unknown-elf/
+	cp -f ./riscv/build_riscv64_toolchain_11_2 $(build_path)/$@
+	cd $(build_path)/$@ && chmod +x build_riscv64_toolchain_11_2
+	cd $(build_path)/$@ && ./build_riscv64_toolchain_64_2 2>&1 | tee build.log
+	cp -f ./env.sh $(build_path)/$@/riscv64-unknown-elf/gcc-*/riscv64-unknown-elf/
 
 riscv64_12.2:
 	mkdir -p $(build_path)/$@
-	cp -f ./riscv/build_riscv32_toolchain_12_2 $(build_path)/$@
-	cd $(build_path)/$@ && chmod +x build_riscv32_toolchain_12_2
-	cd $(build_path)/$@ && ./build_riscv32_toolchain_12_2 2>&1 | tee build.log
-	cp -f ./env.sh $(build_path)/$@/riscv32-unknown-elf/gcc-*/riscv32-unknown-elf/
+	cp -f ./riscv/build_riscv64_toolchain_12_2 $(build_path)/$@
+	cd $(build_path)/$@ && chmod +x build_riscv64_toolchain_12_2
+	cd $(build_path)/$@ && ./build_riscv64_toolchain_64_2 2>&1 | tee build.log
+	cp -f ./env.sh $(build_path)/$@/riscv64-unknown-elf/gcc-*/riscv64-unknown-elf/
+	
+riscv64_13.1_multilib:
+	mkdir -p $(build_path)/$@
+	cp -f ./riscv/build_riscv_toolchain_13_1 $(build_path)/$@
+	cd $(build_path)/$@ && chmod +x build_riscv_toolchain_13_1
+	cd $(build_path)/$@ && ./build_riscv_toolchain_13_1 2>&1 | tee build.log
+	cp -f ./env.sh $(build_path)/$@/riscv64-unknown-elf/gcc-*/riscv64-unknown-elf/
 
 
 all:
-	make -s mips-4.9_patched || true
-	make -s mips-9.3_patched || true
-	make -s mips-9.3 || true
-	make -s avr-9.4 || true
-	make -s riscv64_9.3 || true
-	make -s riscv32_9.3 || true
-	make -s arm-7.1 || true
-	make -s arm-9.4 || true
+	make -s arm-12.2 || true
+	make -s avr-12.2 || true
+	make -s mips-11.2_patched || true
+	make -s riscv64_13.1_multilib || true
 
 cleanall:
 	rm -rf $(build_path)
