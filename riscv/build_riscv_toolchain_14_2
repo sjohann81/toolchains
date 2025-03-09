@@ -1,0 +1,81 @@
+#!/bin/sh
+
+# This script was written by Sergio Johann Filho [sergiojohannfilho@gmail.com]
+#
+# In order to build the toolchain, we need some basic tools:
+# build-essential flex bison libgmp3-dev libmpc-dev libmpfr-dev autoconf
+# texinfo libncurses5-dev gawk libtool zlib1g-dev 
+#
+# You don't need to run this script as root. If you are running this script
+# with a different installation path (such as /usr/local), first create the
+# /usr/local/riscv64-unknown-elf directory and set the owner of this toolchain
+# to your default user or a system admin, if you're the one:
+# $ sudo chown user:user /usr/local/riscv64-unknown-elf
+# Otherwise, the toolchain will be created in the current directory and can
+# be moved to the installation directory at another time.
+# Run this script and wait. After completion, add the tools directory to the
+# PATH # environment variable ($ export PATH=$PATH:/usr/local/riscv64-unknown-elf/gcc/bin).
+# Also, create a symbolic link in the compiler directory (gcc-xx.x.x -> gcc)
+# to support multiple versions of the toolchain.
+
+set -o xtrace
+
+binutils_base="binutils-2.43"
+gcc_base="gcc-14.2.0"
+
+root_dir=`pwd`
+#usr_local_dir="/usr/local"
+usr_local_dir=`pwd`
+
+TARGET=riscv64-unknown-elf
+PREFIX=${usr_local_dir}/$TARGET/${gcc_base}
+BUILD=i686-linux-gnu
+
+# setup our toolchain new path
+export PATH=$PREFIX/bin:$PATH
+
+dl_dir="${root_dir}/download"
+src_dir="${root_dir}/source"
+bld_dir="${root_dir}/build"
+install_dir="${root_dir}/install"
+
+mkdir ${src_dir}
+mkdir ${bld_dir}
+mkdir ${install_dir}
+mkdir ${dl_dir}
+
+# download all sources
+cd $dl_dir
+wget -c ftp://ftp.gnu.org/gnu/binutils/${binutils_base}.tar.gz
+wget -c ftp://ftp.gnu.org/gnu/gcc/${gcc_base}/${gcc_base}.tar.gz
+
+# unpack everything
+cd ${src_dir}
+tar -zxvf ${dl_dir}/"${binutils_base}.tar.gz"
+tar -zxvf ${dl_dir}/"${gcc_base}.tar.gz"
+
+#
+# build binutils
+#
+cd ${bld_dir}
+mkdir ${binutils_base}
+cd ${binutils_base}
+${src_dir}/${binutils_base}/configure --prefix=$PREFIX --target=$TARGET \
+	--disable-multilib
+make -j2 all
+make install-strip
+
+#
+# build GCC
+#
+cd ${src_dir}/${gcc_base}
+./contrib/download_prerequisites
+
+cd ${bld_dir}
+mkdir ${gcc_base}
+cd ${gcc_base}
+${src_dir}/${gcc_base}/configure --prefix=$PREFIX --target=$TARGET \
+	--enable-languages=c,c++ --without-headers --disable-libssp \
+	--disable-shared --disable-multilib
+make -j2 all-gcc
+make install-strip-gcc
