@@ -4,7 +4,7 @@
 #
 # in order to build the toolchain, we need some basic tools:
 # build-essential flex bison libgmp3-dev libmpc-dev libmpfr-dev autoconf
-# texinfo libncurses5-dev gawk libtool zlib1g-dev 
+# texinfo libncurses5-dev gawk libtool zlib1g-dev libusb-1.0-0-dev libusb-dev
 #
 # You don't need to run this script as root. Before running this script, create the
 # /usr/local/avr directory and set the owner of this toolchain to your
@@ -98,6 +98,6 @@ make install
 cd ${bld_dir}
 mkdir ${avrdude_base}
 cd ${avrdude_base}
-${src_dir}/${avrdude_base}/configure --prefix=$PREFIX
+${src_dir}/${avrdude_base}/configure --with-libusb --prefix=$PREFIX
 make -j2 all
 make install
